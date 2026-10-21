@@ -1,0 +1,11 @@
+{
+  "name": "daejeon-tram-route-lab",
+  "version": "1.13.7",
+  "private": true,
+  "type": "module",
+  "description": "Multi-provider geocoding and transit routing with selectable buildings/POIs for origin and destination",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  }
+}

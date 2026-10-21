@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>대전 트램 경로 실험실 v1.13.7 · 출발지·목적지 건물 선택</title>
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+:root{--ink:#15253a;--muted:#68778b;--line:#e3e9f0;--paper:#f4f7fb;--white:#fff;--navy:#17324d;--blue:#2c67dc;--orange:#d96d31;--green:#178056;--red:#b83c52;--shadow:0 12px 32px rgba(20,45,75,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,Pretendard,"Noto Sans KR",system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}button{cursor:pointer}.page{max-width:1420px;margin:0 auto;padding:24px 22px 38px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:22px;font-weight:900}.eyebrow{font-size:10px;font-weight:900;letter-spacing:.13em;color:#0b7c87;text-transform:uppercase;margin:0 0 4px}.brand h1{font-size:24px;letter-spacing:-.04em;margin:0}.topmeta{display:flex;gap:8px;flex-wrap:wrap}.pill{font-size:11px;font-weight:800;border:1px solid var(--line);background:#fff;border-radius:999px;color:#536379;padding:8px 11px}.pill.ready{background:#effaf4;border-color:#c8ead8;color:#13724d}.hero{display:grid;grid-template-columns:minmax(315px,415px) 1fr;gap:18px}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.search{padding:20px}.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:17px}.sectionhead h2{font-size:17px;margin:0}.subtle{font-size:11px;color:var(--muted)}.field{margin-bottom:12px}.field label{display:block;color:#5b6d82;font-size:12px;font-weight:850;margin-bottom:6px}.address-field{position:relative}.address-field:focus-within{z-index:1001}.address-suggestions{display:none;position:absolute;top:calc(100% - 1px);left:0;right:0;z-index:1200;max-height:260px;overflow:auto;background:#fff;border:1px solid #cfdae7;border-radius:0 0 12px 12px;box-shadow:0 12px 28px rgba(20,45,75,.14)}.address-suggestions.open{display:block}.address-suggestions button{display:block;width:100%;text-align:left;padding:10px 12px;background:#fff;border:0;border-bottom:1px solid #edf1f5;color:#22364d}.address-suggestions button:hover,.address-suggestions button:focus{background:#f0f6ff;outline:0}.address-suggestions .road{display:block;font-size:12px;font-weight:850;line-height:1.45}.address-suggestions .jibun,.address-suggestions .zip{display:block;font-size:10px;color:#718096;line-height:1.45;margin-top:2px}.address-suggestions .suggest-hint{padding:12px;font-size:11px;line-height:1.6;color:#66768b}.address-suggestions a{color:#235fc1;font-weight:850}.segment-card{margin:8px 0;border:1px solid #e5ebf2;border-radius:10px;padding:9px 10px;background:#fff}.segment-head{display:flex;justify-content:space-between;gap:10px;font-size:11px;font-weight:850;color:#243b52}.segment-head strong{white-space:nowrap}.segment-sub{font-size:10px;color:#718096;margin-top:3px}.segment-step{display:flex;justify-content:space-between;gap:8px;margin-top:7px;padding-top:6px;border-top:1px dashed #e5ebf2;font-size:10px;color:#627288}.segment-step span{overflow-wrap:anywhere}.segment-step strong{white-space:nowrap;color:#314761}.mode-chain{display:inline-block;background:#fff1e8;color:#a84f1e;border-radius:7px;padding:6px 9px;font-size:11px;font-weight:900;margin:0 0 8px}.inputwrap{position:relative}.pin{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-weight:900;font-size:12px}.pin.start{color:var(--green)}.pin.end{color:var(--red)}input[type=text]{width:100%;border:1px solid #dbe3ec;background:#fbfcfe;border-radius:11px;padding:12px 12px 12px 35px;outline:none}input[type=text]:focus{border-color:#80a4ee;box-shadow:0 0 0 3px #ebf2ff}.swap{margin:0 0 10px 5px;width:34px;height:32px;background:#fff;border:1px solid var(--line);border-radius:9px;color:#607189;font-weight:900}.control{margin:14px 0;padding:13px;border:1px solid #edf1f5;background:#f8fafc;border-radius:13px}.controlhead{display:flex;justify-content:space-between;gap:8px;font-size:11px;font-weight:850;margin-bottom:7px}.controlhead output{color:var(--blue);font-weight:900}.slider{width:100%;accent-color:var(--blue)}.ranges{display:flex;justify-content:space-between;font-size:10px;color:#8a96a7}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:12px}.primary{width:100%;border:0;border-radius:12px;background:var(--blue);color:#fff;font-weight:900;padding:14px 16px;box-shadow:0 8px 20px #2c67dc25}.primary:disabled{opacity:.6;cursor:wait}.status{display:none;margin-top:12px;padding:11px 12px;border:1px solid #d6e7ff;border-radius:10px;background:#eef5ff;color:#2b568d;font-size:11px;line-height:1.55;white-space:pre-line}.status.show{display:block}.status.error{background:#fff2f4;border-color:#ffd1d9;color:#98394a}.status.success{background:#effaf4;border-color:#cdebdc;color:#176c4c}.note{font-size:10.5px;line-height:1.65;color:#76859a;margin:12px 0 0}.map-panel{overflow:hidden;display:flex;flex-direction:column;min-height:610px}.maphead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}.maphead h2{font-size:15px;margin:0}.legend{display:flex;gap:13px;flex-wrap:wrap;color:#68788c;font-size:10px}.legend span{display:flex;align-items:center;gap:6px}.keyline{width:22px;height:4px;border-radius:4px;background:var(--blue)}.keyline.tram{height:0;border-top:3px dashed var(--orange);background:none}.maparea{flex:1;min-height:560px;background:#ebf0f2;position:relative}#map{height:100%;min-height:560px;width:100%}.mapnote{position:absolute;z-index:500;bottom:13px;left:13px;max-width:300px;border:1px solid #dbe2e9;border-radius:9px;padding:8px 10px;background:#ffffffed;color:#6c7a8c;font-size:10px;box-shadow:0 5px 16px #19334e10}.results{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.result{padding:20px;min-height:260px}.resulthead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:13px}.resulthead h2{font-size:17px;margin:0;letter-spacing:-.025em}.tag{background:#edf3ff;color:#2c67dc;border-radius:7px;padding:6px 8px;font-size:10px;font-weight:900;white-space:nowrap}.tag.orange{background:#fff1e8;color:#b85621}.metric{display:flex;align-items:flex-end;gap:7px;margin:5px 0 12px}.big{font-size:38px;line-height:1;font-weight:950;letter-spacing:-.06em}.unit{padding-bottom:4px;color:#718095;font-weight:750;font-size:13px}.difference{margin-left:auto;background:#f1f5f9;color:#64748b;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:900}.difference.good{background:#effaf4;color:#168052}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}.stat{border:1px solid #edf1f6;background:#fbfcfe;border-radius:10px;padding:10px;min-width:0}.stat span{display:block;color:#8794a6;font-size:10px;margin-bottom:5px}.stat strong{font-size:13px;overflow-wrap:anywhere}.steps{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}.steps li{display:flex;gap:9px;align-items:flex-start;border:1px solid #edf1f5;border-radius:10px;padding:9px 10px;font-size:11px;line-height:1.5;color:#526278}.stepicon{flex:0 0 24px;width:24px;height:24px;border-radius:8px;background:#f0f5fb;color:#466995;display:grid;place-items:center;font-size:11px;font-weight:900}.steps strong{display:block;font-size:11px;color:#273b52}.steps small{display:block;color:#7a889b;margin-top:2px;font-size:10px}.formula{background:#f8fafc;border:1px solid #edf1f5;border-radius:12px;padding:12px;margin-top:12px}.formula h3{font-size:11px;color:#66768b;margin:0 0 7px}.formula-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:11px;color:#6e7d91;border-bottom:1px solid #e9eef3}.formula-row:last-child{border-bottom:0}.formula-row strong{color:#203650;white-space:nowrap}.empty{padding:22px;border:1px dashed #d6dfe9;border-radius:12px;text-align:center;color:#7f8da0;font-size:11px;line-height:1.7}.settings{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:0 15px}.settings summary{cursor:pointer;padding:13px 0;font-size:12px;font-weight:900;color:#4f6076}.settingsbody{padding:0 0 14px;font-size:11px;line-height:1.75;color:#68778b}.settingsbody a{color:#315fa9;text-decoration:none}.settingsbody code{background:#f0f4f8;border-radius:4px;padding:2px 4px}.saving-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;padding:12px;border:1px solid #d8e9dd;background:#f2fbf5;border-radius:12px}.saving-summary span{display:block;font-size:10px;color:#6c8275;margin-bottom:5px}.saving-summary strong{font-size:16px;color:#174d35}.saving-summary .saved strong{font-size:20px;color:#12804d}.footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#8a96a7;font-size:10px;margin-top:15px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.map-panel{min-height:450px}.maparea,#map{min-height:400px}.results{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}}@media(max-width:520px){.page{padding:14px 10px 28px}.search,.result{padding:15px}.brand h1{font-size:20px}.twocol{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr 1fr}.maparea,#map{min-height:340px}}
+
+
+/* v1.13.7: make the same explicit candidate-search control visible for both endpoints. */
+.address-field-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.address-field-head label{margin:0;display:block;color:#5b6d82;font-size:12px;font-weight:850}
+.address-search-btn{flex:0 0 auto;border:1px solid #cbd9ed;background:#f1f6ff;color:#2454a5;border-radius:8px;padding:6px 9px;font-size:10px;font-weight:900;line-height:1.2}
+.address-search-btn:hover,.address-search-btn:focus{background:#e4eeff;border-color:#80a4ee;outline:0}
+.address-search-btn.destination-search{border-color:#ebd1d5;background:#fff4f5;color:#a5364b}
+.address-search-btn.destination-search:hover,.address-search-btn.destination-search:focus{background:#ffe8eb;border-color:#dfa0aa}
+.address-search-btn:disabled{opacity:.6;cursor:wait}
+
+/* v1.13.7: building search results are presented like a map-place picker. */
+.address-suggestions{max-height:360px;border-radius:0 0 13px 13px}
+.address-suggestions .suggest-header{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;gap:8px;align-items:center;padding:9px 11px;background:#f8fafc;border-bottom:1px solid #dfe7f0;color:#41536a;font-size:10px;font-weight:800}
+.address-suggestions .suggest-header small{font-weight:600;color:#7b899b}
+.address-suggestions button.suggestion-item{position:relative;padding:11px 12px 12px 40px;min-height:64px}
+.address-suggestions button.suggestion-item:before{content:attr(data-number);position:absolute;left:12px;top:13px;width:19px;height:19px;display:grid;place-items:center;border-radius:6px;background:#eef3fb;color:#4b6382;font-size:10px;font-weight:900}
+.address-suggestions button.suggestion-item.active{background:#edf5ff;box-shadow:inset 3px 0 0 #2c67dc}
+.address-suggestions .suggest-title-row{display:flex;justify-content:space-between;gap:7px;align-items:flex-start}
+.address-suggestions .suggest-type{flex:0 0 auto;border-radius:5px;background:#edf3ff;color:#315fa9;padding:3px 5px;font-size:9px;font-weight:850}
+.address-suggestions .suggest-type.place{background:#eef8f2;color:#23734d}
+.address-suggestions .suggest-title{display:block;min-width:0;font-size:12px;line-height:1.5;font-weight:900;overflow-wrap:anywhere;color:#213850}
+.address-suggestions .suggest-address-line{display:block;margin-top:3px;font-size:10px;line-height:1.5;color:#68788c;overflow-wrap:anywhere}
+.address-suggestions .suggest-address-line strong{display:inline-block;margin-right:4px;color:#8a97a8;font-weight:800}
+.address-suggestions .suggest-address-line.missing{color:#9aa5b3}
+.address-suggestions .suggest-source{display:block;margin-top:4px;font-size:9px;color:#9aa5b3;overflow-wrap:anywhere}
+.address-selected{display:none;margin-top:6px;padding:8px 10px;border:1px solid #cce6d7;border-radius:9px;background:#f2fbf5;font-size:10px;line-height:1.55;color:#2d6649;overflow-wrap:anywhere}
+.address-selected.show{display:block}
+.address-selected .selected-head{font-weight:900;margin-bottom:3px;color:#176c4c}
+.address-selected .selected-line{display:block;color:#507463;margin-top:2px}
+@media(max-width:520px){.address-suggestions{max-height:300px}.address-suggestions button.suggestion-item{padding-left:37px}}
+
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="topbar">
+    <div class="brand"><div class="logo">T</div><div><p class="eyebrow">DAEJEON TRAM · ROUTE LAB</p><h1>대전 트램 도입 경로 시뮬레이터</h1></div></div>
+    <div class="topmeta"><span class="pill">Transitous 경로 API · 출발지·목적지 후보 선택 v1.13.7</span><span class="pill" id="busPill">무료 경로 API 확인 중</span><span class="pill">무료 공개 API · 10분 캐시</span><span class="pill" id="addressPill">주소 검색: 무료 공개 다중 검색</span><span class="pill" id="tramPill">트램 좌표 미확보</span><span class="pill">지도 배경: OpenStreetMap · 대중교통 API: Transitous</span></div>
+  </header>
+  <section class="hero">
+    <aside class="panel search">
+      <div class="sectionhead"><h2>이동 경로 비교</h2><span class="subtle">대전광역시</span></div>
+      <div class="field address-field"><div class="address-field-head"><label for="origin">출발지</label><button class="address-search-btn" type="button" data-address-target="origin">출발지 후보 찾기</button></div><div class="inputwrap"><span class="pin start">A</span><input id="origin" type="text" value="대전광역시 유성구 배울2로 61" placeholder="건물명·도로명·지번 주소 입력" autocomplete="off" aria-autocomplete="list" aria-controls="originSuggestions"></div><div class="address-suggestions" id="originSuggestions" role="listbox"></div><div class="address-selected" id="originSelected" aria-live="polite"></div></div>
+      <button id="swapBtn" class="swap" title="출발지와 목적지 바꾸기">↕</button>
+      <div class="field address-field"><div class="address-field-head"><label for="destination">목적지</label><button class="address-search-btn destination-search" type="button" data-address-target="destination">목적지 후보 찾기</button></div><div class="inputwrap"><span class="pin end">B</span><input id="destination" type="text" value="미라클빌딩, 대전광역시" placeholder="건물명·도로명·지번 주소 입력" autocomplete="off" aria-autocomplete="list" aria-controls="destinationSuggestions"></div><div class="address-suggestions" id="destinationSuggestions" role="listbox"></div><div class="address-selected" id="destinationSelected" aria-live="polite"></div></div>
+      <div class="twocol">
+        <div class="control"><div class="controlhead"><label for="tramSpeed">트램 표정속도</label><output id="tramSpeedValue">22.06</output></div><input class="slider" id="tramSpeed" type="range" min="10" max="24" step="0.1" value="22.06"><div class="ranges"><span>10</span><span>24 km/h</span></div></div>
+        <div class="control"><div class="controlhead"><label for="headway">트램 배차간격</label><output id="headwayValue">10분</output></div><input class="slider" id="headway" type="range" min="5" max="20" step="1" value="10"><div class="ranges"><span>5분</span><span>20분</span></div></div>
+      </div>
+      <div class="control"><div class="controlhead"><label for="dwell">정거장 정차시간</label><output id="dwellValue">20초</output></div><input class="slider" id="dwell" type="range" min="10" max="60" step="5" value="20"><div class="ranges"><span>10초</span><span>60초</span></div></div>
+      <button id="searchBtn" class="primary">경로 비교하기 →</button>
+      <div id="status" class="status"></div>
+      <p class="note">현재 대중교통 경로는 무료 Transitous API로 조회합니다. 지도 배경은 OpenStreetMap 타일이며 Transitous 경로 API와 별개입니다. 트램 도입 시나리오는 출발지에서 버스를 타고 트램역까지 이동한 뒤 트램으로 환승하고, 하차 후 다시 버스를 타는 경로(버스 → 트램 → 버스)를 우선 탐색해. 도로명 주소와 구 주소(지번 주소) 어느 쪽으로 입력해도 무료 공개 지오코더 여러 검색어 형식으로 함께 조회해. 결과에 두 주소가 실제로 제공되면 둘 다 표시하고, 공개 데이터에 없는 주소 형식은 임의로 만들지 않아. 자동완성 후보에서 정확한 장소를 직접 선택해야 다른 장소로 잘못 연결되는 걸 막을 수 있어.</p>
+    </aside>
+    <section class="panel map-panel">
+      <div class="maphead"><h2>경로 지도</h2><div class="legend"><span><i class="keyline"></i>현재 대중교통 경로</span><span><i class="keyline tram"></i>공식 트램 선형 데이터 미확보</span></div></div>
+      <div class="maparea"><div id="map"></div><div class="mapnote">파랑: 무료 Transitous 현재 대중교통 경로<br>주황 점선: 공식 선형 데이터 확보 전까지 표시하지 않음</div></div>
+    </section>
+  </section>
+  <section class="results">
+    <article class="panel result">
+      <div class="resulthead"><div><p class="eyebrow">OPTION A</p><h2>현재 대중교통 경로</h2></div><span class="tag">Transitous 무료 API</span></div>
+      <div id="currentContent"><div class="empty">출발지와 목적지를 입력한 뒤<br>경로 비교하기를 눌러주세요.</div></div>
+    </article>
+    <article class="panel result">
+      <div class="resulthead"><div><p class="eyebrow" style="color:var(--orange)">OPTION B</p><h2>트램 도입 후 가상 경로</h2></div><span class="tag orange">SIMULATION</span></div>
+      <div id="tramContent"><div class="empty">트램이 생겼을 때 예상 소요시간과<br>버스 접근·환승 경로를 계산합니다.</div></div>
+    </article>
+  </section>
+  <details class="settings">
+    <summary>데이터 출처와 계산 방식</summary>
+    <div class="settingsbody">
+      <p><strong>현재 경로 계산:</strong> 인증키가 필요 없는 Transitous 공개 API로 현재 대중교통 경로와 소요시간을 조회합니다. 같은 출발지·목적지 요청은 10분 동안 서버 메모리에 캐시합니다. Transitous는 공개 GTFS를 바탕으로 운영되는 커뮤니티 서비스라 대전 노선 제공 범위가 바뀔 수 있습니다.</p>
+      <p><strong>주소·장소 검색:</strong> 별도 API 키 없이 Transitous/MOTIS와 OpenStreetMap(Photon) 공개 검색을 사용합니다. 도로명 주소와 구 주소(지번 주소) 중 어느 형식으로 입력해도 원문 검색어와 대전광역시를 붙인 검색어를 함께 조회하고, 결과를 합쳐 중복을 줄입니다. 제공자가 두 주소 형식을 모두 알려주는 경우에만 둘 다 표시하며, 지번 정보가 없을 때 도로명 주소를 지번 주소인 것처럼 표시하지 않습니다. 주소·장소 데이터에 없는 항목은 검색되지 않을 수 있으므로 후보를 확인한 뒤 직접 선택해야 합니다.</p>
+      <p><strong>트램 경로:</strong> <a href="https://daejeon.go.kr/djTram/index.do" target="_blank" rel="noreferrer">대전트램 공식 홈페이지</a>의 정거장 명칭을 바탕으로 OpenStreetMap에서 좌표를 근사 검색합니다. 출발지→트램 탑승역과 트램 하차역→목적지는 Transitous에서 각각 조회하며 버스가 포함된 경로를 우선 선택합니다. 따라서 버스 → 트램 → 버스처럼 트램이 중간 이동수단으로 들어갈 수 있습니다. 연결 경로가 없을 때만 가까운 정거장까지 도보 추정으로 대체합니다. 정거장 검색 좌표는 공식 선로 좌표가 아니므로 지도에는 주황색 트램 선형을 표시하지 않습니다. 공식 실시설계 선형 데이터 확보 후에만 선로 레이어를 추가해야 합니다. 거리·시간은 별도 시뮬레이션 계산값입니다. 트램 구간은 표정속도·배차간격·정차시간 가정으로 계산하며 공식 운행시간표가 아닙니다.</p>
+      <p><strong>비용·인증:</strong> 대중교통 경로와 주소·장소 검색은 API 키가 필요 없는 공개 서비스를 사용합니다. Transitous는 커뮤니티 기반 공개 서비스이며 대전 지역의 주소·대중교통 데이터 커버리지에 따라 검색 결과가 다를 수 있습니다. 검색 후보를 직접 선택하지 않으면 경로 계산을 진행하지 않습니다.</p>
+      <p><strong>유의:</strong> 현재 경로는 Transitous 공개 대중교통 API 응답입니다. 지도 배경 타일은 OpenStreetMap에서 제공되며 Transitous 자체 타일이 아닙니다. 트램 도입 후는 출발지→트램역과 트램역→목적지의 대중교통 경로를 별도로 조회해 가운데 가상 트램 구간과 연결합니다. 연결 대중교통 경로가 없을 때만 가까운 정거장까지 짧은 도보 추정으로 대체합니다. 트램 구간은 정거장 좌표와 평균속도·배차간격·정차시간으로 계산한 시뮬레이션이며, 두 개의 현재 시간표 경로를 가상 트램 운행과 동기화한 정밀 시간표는 아닙니다. 동일 출발지·목적지 결과는 메모리에 10분 캐시해 공개 서비스 호출을 줄입니다. 절감 시간은 가정에 따른 비교이며 실측값이나 보장값이 아닙니다. 주소 검색은 도로명 주소·지번 주소 어느 쪽으로 입력해도 Transitous/MOTIS와 Photon/OpenStreetMap을 함께 조회합니다. 원문/대전 지역명 검색 결과를 합쳐 표시하며, 실제로 반환된 지번 주소만 지번이라고 표시합니다. 사용자가 직접 선택한 결과의 좌표를 Transitous 경로 API에 전달합니다. 검색 후보를 선택하지 않으면 자동으로 첫 결과를 사용하지 않습니다. 트램 정거장 좌표는 지도검색 기반 근사치입니다.</p>
+    </div>
+  </details>
+  <div class="footer"><span>대전 트램 경로 실험실 · 해커톤 MVP</span><span>현재 대중교통 = 무료 Transitous API · 미래 경로 = 대중교통 + 트램 + 대중교통 시뮬레이션</span></div>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const $ = id => document.getElementById(id);
+let map, originMarker, destinationMarker, currentLine, tramLine, tramMarkers;
+let lastLocations = null;
+function apiGet(url) {
+  return fetch(url).then(async r => {
+    const data = await r.json().catch(() => ({error:'서버에서 JSON 응답을 읽지 못했습니다.'}));
+    if (!r.ok) { const e = new Error(data.error || `서버 오류 ${r.status}`); e.detail = data; throw e; }
+    return data;
+  });
+}
+function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms));}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function n(v,d=1){return Number(v).toLocaleString('ko-KR',{maximumFractionDigits:d,minimumFractionDigits:0});}
+function fmtTime(m){if(!Number.isFinite(Number(m)))return '—';const v=Math.max(0,Math.round(Number(m)));if(v>=60)return `${Math.floor(v/60)}시간 ${v%60}분`;return `${v}분`;}
+function showStatus(text,kind=''){const el=$('status');el.textContent=text;el.className='status show'+(kind?' '+kind:'');}
+function setBusy(on){$('searchBtn').disabled=on;$('searchBtn').textContent=on?'경로를 계산하는 중…':'경로 비교하기 →';}
+// 대전 시내 중심부를 유지하기 위한 대략적 지도 이동 제한 상자(행정경계 폴리곤 아님).
+const DAEJEON_BOUNDS = L ? L.latLngBounds([[36.20,127.23],[36.50,127.55]]) : null;
+function initMap(){if(!window.L){$('map').innerHTML='<div class="empty">지도를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</div>';return;}map=L.map('map',{maxBounds:DAEJEON_BOUNDS,maxBoundsViscosity:1.0,minZoom:11,maxZoom:16}).setView([36.3504,127.3845],12.5);map.setMaxBounds(DAEJEON_BOUNDS);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);tramMarkers=L.layerGroup().addTo(map);}
+initMap();
+async function waitForStatus(type='tram'){
+  const url='/api/tram/status';
+  const started=Date.now();
+  while(Date.now()-started<300000){
+    const status=await apiGet(url);
+    if(status.status==='ready')return status;
+    if(status.status==='error')throw new Error(status.error||'트램 정거장 좌표 준비 오류');
+    showStatus(`트램 정거장 위치 준비 중… ${status.progress||0}/${status.total||45}\n${status.step||''}\n최초 1회만 진행하며 순차 조회합니다.`);
+    await wait(900);
+  }
+  throw new Error('트램 정거장 좌표 준비 시간이 초과됐습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.');
+}
+function lineStyle(color,dash){return {color,weight:5,opacity:.88,dashArray:dash||null};}
+function drawMap(locations,current,tram){
+  if(!map||!window.L)return;
+  [originMarker,destinationMarker,currentLine,tramLine].forEach(x=>{if(x)map.removeLayer(x)});tramMarkers.clearLayers();
+  const {origin,destination}=locations;
+  originMarker=L.marker([origin.lat,origin.lon]).addTo(map).bindPopup('출발지: '+escapeHtml(origin.name));
+  destinationMarker=L.marker([destination.lat,destination.lon]).addTo(map).bindPopup('목적지: '+escapeHtml(destination.name));
+  const bounds=[[origin.lat,origin.lon],[destination.lat,destination.lon]];
+  if(current?.geometry?.length>1){currentLine=L.polyline(current.geometry,lineStyle('#2c67dc')).addTo(map);current.geometry.forEach(p=>bounds.push(p));}
+  // 정거장 좌표는 지오코딩 검색값일 뿐 공식 선로 좌표가 아니므로
+  // 잘못된 주황색 직선/점선을 그리지 않는다. 공식 선형 데이터가 확보되면 별도 레이어로 추가한다.
+  // 경로 결과로 지도 범위가 대전 밖까지 확대되지 않도록 자동 fitBounds를 사용하지 않는다.
+  const cityCenter=L.latLng(36.3504,127.3845);
+  const currentPoints=(current?.geometry||[]).filter(p=>Array.isArray(p)&&p.length>=2&&p[0]>=36.20&&p[0]<=36.50&&p[1]>=127.23&&p[1]<=127.55);
+  if(currentPoints.length>1){
+    const currentBounds=L.latLngBounds(currentPoints);
+    const cityViewBounds=DAEJEON_BOUNDS;
+    const target=currentBounds.getCenter();
+    if(cityViewBounds.contains(target)) map.panTo(target,{animate:false}); else map.panTo(cityCenter,{animate:false});
+    if(map.getZoom()<12) map.setZoom(12,{animate:false});
+  } else {
+    map.panTo(cityCenter,{animate:false});
+    if(map.getZoom()<12) map.setZoom(12,{animate:false});
+  }
+}
+function renderCurrent(route){
+  if(!route){$('currentContent').innerHTML='<div class="empty">현재 대중교통 경로를 찾지 못했습니다. Transitous 데이터에 대전 노선이 포함되지 않았거나 해당 시간에 연결 경로가 없을 수 있습니다.</div>';return;}
+  const isTransitous=route.source==='TRANSITOUS';
+  const rt=route.routeNumbers?.length?route.routeNumbers.map(x=>isTransitous?escapeHtml(x):`${escapeHtml(x)}번`).join(' → '):(route.directWalk?'도보':'노선 정보 없음');
+  const fareHtml=route.fare!==null&&route.fare!==undefined&&Number.isFinite(Number(route.fare))?`<div class="formula-row"><span>예상 요금</span><strong>${n(route.fare,0)}원</strong></div>`:'';
+  const alternatives=route.alternatives?.length?`<div class="formula"><h3>다른 경로 후보</h3>${route.alternatives.slice(0,4).map((a,i)=>`<div class="formula-row"><span>${i+2}안 · ${escapeHtml((a.routeNumbers||[]).slice(0,3).join(' → ')||'대중교통')} · 환승 ${Number(a.transferCount||0)}회</span><strong>${fmtTime(a.timeMin)}${Number.isFinite(Number(a.fare))?` · ${n(a.fare,0)}원`:''}</strong></div>`).join('')}</div>`:'';
+  const html=`<div class="metric"><span class="big">${Math.round(route.timeMin)}</span><span class="unit">분</span><span class="difference">${isTransitous?'Transitous 공개 API 응답':'추정 경로'}</span></div>
+  <div class="stats"><div class="stat"><span>예상 이동거리</span><strong>${n(route.distanceKm,1)} km</strong></div><div class="stat"><span>환승</span><strong>${route.directWalk?'0회':`${route.transferCount||0}회`}</strong></div><div class="stat"><span>이용 노선</span><strong>${rt}</strong></div></div>
+  <div class="formula"><h3>경로 요약</h3><div class="formula-row"><span>처음 승차 지점</span><strong>${escapeHtml(route.boardingStop||'도보 출발')}</strong></div><div class="formula-row"><span>마지막 하차 지점</span><strong>${escapeHtml(route.alightingStop||'도보 도착')}</strong></div><div class="formula-row"><span>시간 출처</span><strong>${isTransitous?'Transitous 공개 대중교통 경로 API':'도보 대체 추정'}</strong></div><div class="formula-row"><span>도보 이동거리</span><strong>${n(route.walkDistanceKm||0,2)} km</strong></div>${fareHtml}</div>
+  <ul class="steps">${(route.steps||[]).slice(0,10).map((s)=>{const icon=s.kind==='bus'?'🚌':s.kind==='rail'?'🚈':s.kind==='transfer'?'↔':s.kind==='wait'?'◷':'🚶';const line=(s.kind==='bus'||s.kind==='rail')?`${s.label} · ${s.from} → ${s.to}`:s.kind==='transfer'?`${s.from} → ${s.to}`:(s.label||'도보 이동');const meta=(s.kind==='bus'||s.kind==='rail')?`${Math.round(s.minutes)}분 · ${s.stopCount||0}개 정거장 · ${n(s.distanceKm||0,1)}km`:s.kind==='transfer'?`${Math.round(s.minutes)}분(도보·대기 추정)`:fmtTime(s.minutes);return `<li><span class="stepicon">${icon}</span><div><strong>${escapeHtml(line)}</strong><small>${escapeHtml(meta)}</small></div></li>`}).join('')}</ul>
+  ${alternatives}
+  <p class="note">현재 이동시간·환승·거리·요금은 Transitous 공개 API 응답입니다. 커뮤니티가 수집한 GTFS 시간표와 실시간 피드 범위에 따라 결과가 다르거나 대전 경로가 없을 수 있습니다.</p>`;
+  $('currentContent').innerHTML=html;
+}
+function renderTram(tram,current){
+  if(!tram){$('tramContent').innerHTML='<div class="empty">트램 시뮬레이션 결과가 없습니다.</div>';return;}
+  const saved=current&&Number.isFinite(current.timeMin)?current.timeMin-tram.totalMin:null;
+  const percent=current&&current.timeMin>0&&Number.isFinite(saved)?saved/current.timeMin*100:null;
+  const label=saved===null?'비교 불가':saved>0.5?`${n(saved,1)}분 단축 · ${n(percent,1)}% 감소`:saved< -0.5?`${n(Math.abs(saved),1)}분 증가 · ${n(Math.abs(percent),1)}% 증가`:'예상시간 차이 거의 없음';
+  const cls=saved!==null&&saved>0.5?'difference good':'difference';
+  const savingSummary=current?`<div class="saving-summary"><div><span>현재 대중교통 경로</span><strong>${fmtTime(current.timeMin)}</strong></div><div><span>버스·트램 혼합 시나리오</span><strong>${fmtTime(tram.totalMin)}</strong></div><div class="saved"><span>예상 절감 시간</span><strong>${saved>0?`${n(saved,1)}분`:`${n(Math.abs(saved||0),1)}분`}</strong><small>${saved>0?`${n(percent,1)}% 단축`:saved<0?`${n(Math.abs(percent),1)}% 증가`:'변화 없음'}</small></div></div>`:'';
+  const segments=(tram.segments||[]).map(s=>{
+    const nested=(s.steps||[]).slice(0,6).map(step=>{
+      const icon=step.kind==='bus'?'🚌':step.kind==='rail'?'🚈':step.kind==='transfer'?'↔':'🚶';
+      const title=(step.kind==='bus'||step.kind==='rail')?`${step.label||'대중교통'} · ${step.from||''} → ${step.to||''}`:`${step.label||'도보 이동'} · ${step.from||''} → ${step.to||''}`;
+      return `<div class="segment-step"><span>${icon} ${escapeHtml(title)}</span><strong>${fmtTime(step.minutes||0)}</strong></div>`;
+    }).join('');
+    return `<div class="segment-card"><div class="segment-head"><span>${escapeHtml(s.label)}</span><strong>${fmtTime(s.minutes)}</strong></div><div class="segment-sub">${escapeHtml(s.sub||'')}</div>${s.warning?`<div class="segment-sub">주의: ${escapeHtml(s.warning)}</div>`:''}${nested}</div>`;
+  }).join('');
+  const routeChain=tram.modeChain||((tram.access?.hasBus&&tram.egress?.hasBus)?'버스 → 트램 → 버스':'대중교통 + 트램 혼합 시나리오');
+  $('tramContent').innerHTML=`<div class="metric"><span class="big">${Math.round(tram.totalMin)}</span><span class="unit">분</span><span class="${cls}">${label}</span></div>${savingSummary}<div class="mode-chain">${escapeHtml(routeChain)}</div><div class="stats"><div class="stat"><span>트램 탑승</span><strong>${escapeHtml(tram.startStation.name)}</strong></div><div class="stat"><span>트램 하차</span><strong>${escapeHtml(tram.endStation.name)}</strong></div><div class="stat"><span>트램 구간거리</span><strong>${n(tram.ride.distanceKm,1)} km</strong></div></div><div class="formula"><h3>이동 구간별 예상시간</h3>${segments}<div class="formula-row"><span>추가 환승 연결시간</span><strong>${fmtTime((tram.transferBufferMin||0)*2)}</strong></div></div><p class="note">버스 접근·이탈은 무료 Transitous에서 각각 조회한 별도 현재 시간표 경로입니다. 이 두 시간표를 미래 트램 운행과 동기화한 것은 아니므로 가정값 기반 비교로 봐야 합니다. 연결 경로가 없을 때만 짧은 구간을 도보 추정으로 대체합니다. 정거장 검색 좌표는 공식 선로 좌표가 아니므로 지도에는 주황색 트램 선형을 표시하지 않습니다. 공식 실시설계 선형 데이터 확보 후에만 선로 레이어를 추가해야 합니다. 거리·시간은 별도 시뮬레이션 계산값입니다. 트램 구간은 표정속도 ${n($('tramSpeed').value,2)}km/h, 배차간격 ${$('headway').value}분, 정차시간 ${$('dwell').value}초를 적용한 시뮬레이션입니다.</p>`;
+}
+function sliderValue(){return {tramSpeed:Number($('tramSpeed').value),headway:Number($('headway').value),dwell:Number($('dwell').value)};}
+async function resolveInputLocation(inputId){
+  const input=$(inputId); const text=input.value.trim();
+  const rawLat=String(input.dataset.lat||'').trim(), rawLon=String(input.dataset.lon||'').trim();
+  const lat=rawLat===''?NaN:Number(rawLat), lon=rawLon===''?NaN:Number(rawLon);
+  // Do not silently use the first geocoder result. The user must confirm the
+  // exact candidate so a query like 월평중학교 cannot resolve to 역전시장.
+  const inKorea=Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=33&&lat<=39.5&&lon>=124&&lon<=132;
+  if(input.dataset.selectedAddress===text && rawLat!=='' && rawLon!=='' && inKorea){
+    if(!validKoreanMapPoint(lat,lon)) throw new Error(`선택한 위치가 대전 시내 범위를 벗어났습니다: ${text}`);
+    return {lat,lon,name:text,address:text,source:input.dataset.addressSource||'주소 자동완성에서 선택한 좌표'};
+  }
+  const boxId=inputId+'Suggestions';
+  try {
+    const payload=await apiGet('/api/address-search?q='+encodeURIComponent(text));
+    renderAddressSuggestions(inputId,boxId,payload);
+    if(!payload.results?.length) throw new Error('검색 결과가 없습니다. 도로명·건물번호 또는 학교·역의 정식 명칭으로 다시 검색해 주세요.');
+  } catch(e) {
+    if(!String(e.message||'').includes('검색 결과가 없습니다')) showSuggestionHint(boxId,`주소 검색 실패: ${e.message}`);
+  }
+  throw new Error(`'${text}'의 자동완성 후보에서 정확한 주소·장소를 선택한 뒤 다시 경로 비교를 눌러주세요. 가장 비슷한 결과를 자동 선택하지 않습니다.`);
+}
+async function performSearch(){
+  const from=$('origin').value.trim(),to=$('destination').value.trim();
+  if(!from||!to){showStatus('출발지와 목적지를 모두 입력하세요.','error');return;}
+  // Resolve one endpoint at a time so one dropdown cannot cover the other.
+  // Both fields require an explicit user choice; never geocode to an arbitrary first result.
+  for (const target of [{id:'origin',label:'출발지'},{id:'destination',label:'목적지'}]) {
+    const input=$(target.id);
+    const lat=Number(input.dataset.lat), lon=Number(input.dataset.lon);
+    const selected=input.dataset.selectedAddress===input.value.trim() && input.dataset.lat!=='' && input.dataset.lon!=='' && validKoreanMapPoint(lat,lon);
+    if(!selected){
+      const box=$(target.id+'Suggestions');
+      if(!box.querySelector('button.suggestion-item')) await requestAddressSearch(target.id,target.id+'Suggestions');
+      else box.classList.add('open');
+      showStatus(`먼저 ${target.label} 검색 결과에서 정확한 건물을 선택해 주세요. 선택 후 다시 '경로 비교하기'를 누르면 다음 위치를 확인합니다.`,'error');
+      input.focus();
+      return;
+    }
+  }
+  setBusy(true);
+  $('currentContent').innerHTML='<div class="empty">선택한 주소의 좌표를 연결하고 무료 Transitous에서 현재 대중교통 경로를 조회하고 있습니다…</div>';
+  $('tramContent').innerHTML='<div class="empty">현재 경로를 조회한 뒤 트램 시나리오를 계산합니다.</div>';
+  try {
+    showStatus('출발지와 목적지의 좌표를 확인하고 있습니다.');
+    const [origin,destination]=await Promise.all([
+      resolveInputLocation('origin'),
+      resolveInputLocation('destination')
+    ]);
+    if($('origin').value.trim()!==from || $('destination').value.trim()!==to){
+      throw new Error('검색 중 주소가 변경되었습니다. 현재 출발지와 목적지를 확인한 뒤 다시 검색해 주세요.');
+    }
+    lastLocations={origin:{...origin,name:from,address:from},destination:{...destination,name:to,address:to}};
+    const qBase={startLat:origin.lat,startLon:origin.lon,endLat:destination.lat,endLon:destination.lon};
+    const currentData=await apiGet('/api/transit-route?'+new URLSearchParams({...qBase,count:5}));
+    const current={...currentData.best,alternatives:(currentData.routes||[]).slice(1,5)};
+    renderCurrent(current);
+    drawMap(lastLocations,current,null);
+    $('busPill').textContent=`현재 경로: Transitous (${currentData.totalRoutes||1}개 후보)`;$('busPill').className='pill ready';
+    const sources=[origin.source,destination.source].filter(Boolean);
+    const sourceLabel=[...new Set(sources)].join(' / ') || '좌표 확인 완료';
+    $('addressPill').textContent=`주소 좌표: ${sourceLabel}`;
+    $('addressPill').className='pill ready';
+    const params=sliderValue();
+    showStatus('현재 경로는 확인했어. 트램 정거장 좌표를 준비하고 도입 시나리오를 계산합니다. 첫 실행은 약 1분 이상 걸릴 수 있습니다.');
+    await apiGet('/api/tram/stations/load');
+    await waitForStatus('tram');
+    const q=new URLSearchParams({...qBase,tramSpeed:params.tramSpeed,headway:params.headway,dwell:params.dwell});
+    const comparison=await apiGet('/api/compare?'+q);
+    renderCurrent(comparison.current||current);
+    renderTram(comparison.tram,comparison.current||current);
+    drawMap(lastLocations,comparison.current||current,comparison.tram);
+    $('busPill').textContent='현재 경로: 무료 Transitous API';$('busPill').className='pill ready';
+    $('tramPill').textContent=`트램 좌표 ${comparison.stationCount}개`;$('tramPill').className='pill ready';
+    const saved=comparison.comparison?.minutesSaved;
+    const pct=comparison.comparison?.reductionPercent;
+    const saving=Number.isFinite(saved)?(saved>0?`예상 ${n(saved,1)}분 단축 (${n(pct,1)}%)`:saved<0?`예상 ${n(Math.abs(saved),1)}분 증가 (${n(Math.abs(pct),1)}%)`:'예상시간 차이 거의 없음'):'절감 시간 계산 불가';
+    const warnings=[origin.warning,destination.warning].filter(Boolean).join('\n');
+    showStatus(`비교 완료 · 현재 Transitous 경로 ${fmtTime((comparison.current||current).timeMin)} · 버스/대중교통-트램 혼합 시나리오 ${fmtTime(comparison.tram.totalMin)} · ${comparison.tram.modeChain||'혼합 경로'} · ${saving}\n트램 이동시간은 속도·배차간격·정차시간 가정에 따른 시뮬레이션입니다.${warnings?'\n'+warnings:''}`,'success');
+  } catch(e) {
+    showStatus(e.message||'경로 계산 중 오류가 발생했습니다.','error');
+    if(!$('currentContent').textContent.trim()||$('currentContent').textContent.includes('좌표를 찾고'))$('currentContent').innerHTML=`<div class="empty">${escapeHtml(e.message)}<br><br>Transitous에서 대전 대중교통 데이터와 각 트램 연결 구간을 찾을 수 있는지 확인하세요. 주소 검색은 별도 키가 필요 없는 공개 지오코더를 이용합니다. 정확한 자동완성 후보를 직접 선택해 주세요.</div>`;
+    if(!$('tramContent').textContent.trim()||$('tramContent').textContent.includes('계산합니다'))$('tramContent').innerHTML=`<div class="empty">${escapeHtml(e.message)}</div>`;
+  } finally {setBusy(false);}
+}
+$('searchBtn').addEventListener('click',performSearch);
+$('swapBtn').addEventListener('click',()=>{const a=$('origin'),b=$('destination');const keys=['value','lat','lon','selectedAddress','addressSource','selectedRoadAddress','selectedJibunAddress','transitousSelected'];const av={};for(const k of keys)av[k]=k==='value'?a.value:a.dataset[k];for(const k of keys){if(k==='value')a.value=b.value;else a.dataset[k]=b.dataset[k]||'';}for(const k of keys){if(k==='value')b.value=av.value;else b.dataset[k]=av[k]||'';}const set=(id,source)=>{const box=$(id+'Selected');if(source.dataset.selectedAddress===source.value&&source.dataset.lat&&source.dataset.lon){const title=source.value;const r=source.dataset.selectedRoadAddress||'';const j=source.dataset.selectedJibunAddress||'';box.innerHTML=`<div class="selected-head">✓ 선택한 위치</div><strong>${escapeHtml(title)}</strong>${r?`<span class="selected-line">주소: ${escapeHtml(r)}</span>`:''}<span class="selected-line">지번 주소: ${j?escapeHtml(j):'검색 제공 데이터에 없음'}</span>`;box.classList.add('show');}else{box.innerHTML='';box.classList.remove('show');}};set('origin',a);set('destination',b);});
+$('tramSpeed').addEventListener('input',()=>{$('tramSpeedValue').textContent=Number($('tramSpeed').value).toFixed(2);});
+$('headway').addEventListener('input',()=>{$('headwayValue').textContent=$('headway').value+'분';});
+$('dwell').addEventListener('input',()=>{$('dwellValue').textContent=$('dwell').value+'초';});
+const addressTimers = new Map();
+const addressRequestSeq = new Map();
+function closeAddressSuggestions(boxId){const box=$(boxId);if(box){box.classList.remove('open');box.innerHTML='';box.dataset.highlightedIndex='-1';}}
+function showSuggestionHint(boxId, text, linkText='', linkUrl=''){
+  const box=$(boxId);if(!box)return;
+  box.innerHTML=`<div class="suggest-hint">${escapeHtml(text)}${linkUrl?`<br><a href="${escapeHtml(linkUrl)}" target="_blank" rel="noreferrer">${escapeHtml(linkText||'API 신청 페이지 열기')}</a>`:''}</div>`;
+  box.classList.add('open');
+}
+function validKoreanMapPoint(lat,lon){
+  // Approximate Daejeon-only bounds; not the exact administrative polygon.
+  return Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=36.20&&lat<=36.50&&lon>=127.23&&lon<=127.55;
+}
+function selectedSummaryHtml(item){
+  const title=item.name||item.buildingName||item.roadAddress||item.address||'선택한 위치';
+  const lines=[];
+  if(item.roadAddress||item.address) lines.push(`<span class="selected-line">주소: ${escapeHtml(item.roadAddress||item.address)}</span>`);
+  if(item.jibunAddress) lines.push(`<span class="selected-line">지번 주소: ${escapeHtml(item.jibunAddress)}</span>`);
+  if(!item.jibunAddress) lines.push('<span class="selected-line">지번 주소: 검색 제공 데이터에 없음</span>');
+  return `<div class="selected-head">✓ 선택한 위치</div><strong>${escapeHtml(title)}</strong>${lines.join('')}`;
+}
+function renderSelectedAddress(inputId,item){
+  const box=$(inputId+'Selected'); if(!box)return;
+  box.innerHTML=selectedSummaryHtml(item); box.classList.add('show');
+}
+function clearSelectedAddress(inputId){const box=$(inputId+'Selected');if(box){box.innerHTML='';box.classList.remove('show');}}
+function previewSelectedAddress(inputId,item){
+  if(!map||!window.L)return;
+  const lat=Number(item.lat),lon=Number(item.lon);
+  if(!validKoreanMapPoint(lat,lon))return;
+  const isOrigin=inputId==='origin';
+  const markerName=isOrigin?'originPreviewMarker':'destinationPreviewMarker';
+  const oldMarker=window[markerName];
+  if(oldMarker)map.removeLayer(oldMarker);
+  const label=(item.name||item.buildingName||item.roadAddress||item.address||'선택한 위치');
+  const address=item.roadAddress||item.address||'';
+  const marker=L.marker([lat,lon]).addTo(map).bindPopup(`<strong>${escapeHtml(label)}</strong>${address?'<br>'+escapeHtml(address):''}`);
+  if(isOrigin)originPreviewMarker=marker;else destinationPreviewMarker=marker;
+  if(!DAEJEON_BOUNDS.contains([lat,lon])){map.panTo(L.latLng(36.3504,127.3845),{animate:false});return;}
+  map.setView([lat,lon],15,{animate:false}); marker.openPopup();
+}
+function resultTypeLabel(item){
+  if(item.type==='STOP')return '정류장';
+  if(item.type==='ADDRESS')return '주소';
+  const category=String(item.category||'').toLowerCase();
+  if(category.includes('building')||category.includes('commercial')||category.includes('office'))return '건물';
+  return '건물·장소';
+}
+function renderAddressSuggestions(inputId,boxId,payload){
+  const box=$(boxId);if(!box)return;
+  const results=Array.isArray(payload.results)?payload.results:[];
+  box.dataset.highlightedIndex='-1';
+  if(!results.length){showSuggestionHint(boxId,'검색 결과가 없습니다. 건물명, 도로명 주소 또는 지번 주소를 조금 더 구체적으로 입력해 보세요.');return;}
+  box.innerHTML='';
+  const head=document.createElement('div'); head.className='suggest-header';
+  const count=Number(payload.totalCount)||results.length;
+  head.innerHTML=`<span>검색 결과 ${Math.min(results.length,count)}개</span><small>건물·장소·주소를 비교해 선택</small>`;
+  box.append(head);
+  results.forEach((item,index)=>{
+    const button=document.createElement('button');button.type='button';button.className='suggestion-item';button.setAttribute('role','option');button.dataset.number=String(index+1);button.dataset.index=String(index);button.setAttribute('aria-label',`${item.name||item.buildingName||'검색 결과'}, ${item.roadAddress||item.address||''}, ${item.jibunAddress||'지번 정보 없음'}`);
+    const titleRow=document.createElement('span');titleRow.className='suggest-title-row';
+    const title=document.createElement('span');title.className='suggest-title';title.textContent=item.buildingName||item.name||item.roadAddress||item.address||'이름 없는 장소';
+    const type=document.createElement('span');type.className='suggest-type'+(item.type==='PLACE'?' place':'');type.textContent=resultTypeLabel(item);
+    titleRow.append(title,type);button.append(titleRow);
+    const roadValue=item.roadAddress||item.address||'';
+    const roadLine=document.createElement('span');roadLine.className='suggest-address-line';
+    roadLine.innerHTML=roadValue?`<strong>주소</strong>${escapeHtml(roadValue)}`:'<strong>주소</strong>제공된 주소 정보 없음';button.append(roadLine);
+    const jibunLine=document.createElement('span');jibunLine.className='suggest-address-line'+(item.jibunAddress?'':' missing');
+    jibunLine.innerHTML=item.jibunAddress?`<strong>지번</strong>${escapeHtml(item.jibunAddress)}`:'<strong>지번</strong>공개 검색 데이터에 지번 주소가 없음';button.append(jibunLine);
+    const meta=[item.regionLabel||item.district||item.neighborhood||'',item.category||'',item.source||payload.source||''].filter(Boolean).join(' · ');
+    if(meta){const source=document.createElement('span');source.className='suggest-source';source.textContent=meta;button.append(source);}
+    button.addEventListener('click',()=>{
+      const input=$(inputId);const chosenName=item.name||item.buildingName||item.roadAddress||item.address||'';
+      input.value=chosenName;input.dataset.selectedAddress=input.value;input.dataset.addressSource=item.source||payload.source||'';
+      input.dataset.lat=Number.isFinite(Number(item.lat))?String(item.lat):'';input.dataset.lon=Number.isFinite(Number(item.lon))?String(item.lon):'';
+      input.dataset.transitousSelected='true';input.dataset.selectedRoadAddress=item.roadAddress||item.address||'';input.dataset.selectedJibunAddress=item.jibunAddress||'';
+      closeAddressSuggestions(boxId);renderSelectedAddress(inputId,item);previewSelectedAddress(inputId,item);input.focus();
+    });
+    box.append(button);
+  });
+  box.classList.add('open');
+}
+function highlightSuggestion(boxId,index){
+  const box=$(boxId);if(!box)return;
+  const buttons=[...box.querySelectorAll('button.suggestion-item')];if(!buttons.length)return;
+  const bounded=Math.max(0,Math.min(index,buttons.length-1));
+  buttons.forEach((b,i)=>{b.classList.toggle('active',i===bounded);b.setAttribute('aria-selected',i===bounded?'true':'false');});
+  box.dataset.highlightedIndex=String(bounded);buttons[bounded].scrollIntoView({block:'nearest'});
+}
+async function requestAddressSearch(inputId,boxId){
+  const input=$(inputId);const query=input.value.trim();
+  if(query.length<2){showSuggestionHint(boxId,'건물명 또는 주소를 두 글자 이상 입력해 주세요.');return;}
+  clearTimeout(addressTimers.get(inputId));
+  const seq=(addressRequestSeq.get(inputId)||0)+1;addressRequestSeq.set(inputId,seq);
+  showSuggestionHint(boxId,`${inputId==='origin'?'출발지':'목적지'} 후보를 검색하고 있습니다…`);
+  try{
+    const response=await fetch('/api/address-search?q='+encodeURIComponent(query));
+    const payload=await response.json().catch(()=>({error:'주소 검색 응답을 해석하지 못했습니다.'}));
+    if(addressRequestSeq.get(inputId)!==seq)return;
+    if(!response.ok){showSuggestionHint(boxId,`${payload.error||'주소 검색 결과가 없습니다.'} 건물명이나 주소를 더 구체적으로 입력해 다시 시도해 주세요.`);return;}
+    renderAddressSuggestions(inputId,boxId,payload);
+  }catch(error){if(addressRequestSeq.get(inputId)===seq)showSuggestionHint(boxId,`주소 검색 오류: ${error.message}`);}
+}
+function bindAddressSearch(inputId,boxId){
+  const input=$(inputId);
+  input.addEventListener('input',()=>{
+    if(inputId==='origin'&&originPreviewMarker){map?.removeLayer(originPreviewMarker);originPreviewMarker=null;}
+    if(inputId==='destination'&&destinationPreviewMarker){map?.removeLayer(destinationPreviewMarker);destinationPreviewMarker=null;}
+    input.dataset.transitousSelected='false';input.dataset.selectedAddress='';input.dataset.lat='';input.dataset.lon='';input.dataset.addressSource='';input.dataset.selectedRoadAddress='';input.dataset.selectedJibunAddress='';
+    clearSelectedAddress(inputId);clearTimeout(addressTimers.get(inputId));
+    // Invalidate any older in-flight response so stale results cannot overwrite this query.
+    addressRequestSeq.set(inputId,(addressRequestSeq.get(inputId)||0)+1);
+    const query=input.value.trim();if(query.length<2){closeAddressSuggestions(boxId);return;}
+    const timer=setTimeout(()=>requestAddressSearch(inputId,boxId),550);
+    addressTimers.set(inputId,timer);
+  });
+  input.addEventListener('keydown',event=>{
+    const box=$(boxId); const buttons=box?[...box.querySelectorAll('button.suggestion-item')]:[];
+    const current=Number(box?.dataset.highlightedIndex??-1);
+    if(event.key==='Escape'){closeAddressSuggestions(boxId);return;}
+    if(event.key==='ArrowDown'&&box?.classList.contains('open')&&buttons.length){event.preventDefault();highlightSuggestion(boxId,current<0?0:Math.min(buttons.length-1,current+1));return;}
+    if(event.key==='ArrowUp'&&box?.classList.contains('open')&&buttons.length){event.preventDefault();highlightSuggestion(boxId,current<0?0:Math.max(0,current-1));return;}
+    if(event.key==='Enter'&&box?.classList.contains('open')){
+      event.preventDefault();
+      if(current>=0&&buttons[current])buttons[current].click();
+      else showSuggestionHint(boxId,'후보 목록의 건물·장소·주소 중 원하는 항목을 ↑/↓ 키로 고르거나 직접 클릭하세요.');
+    }
+  });
+  document.addEventListener('click',event=>{if(!input.closest('.address-field')?.contains(event.target))closeAddressSuggestions(boxId);});
+}
+for(const button of document.querySelectorAll('[data-address-target]')){
+  button.addEventListener('click',()=>{
+    const id=button.dataset.addressTarget;
+    requestAddressSearch(id,id+'Suggestions');
+  });
+}
+bindAddressSearch('origin','originSuggestions');
+bindAddressSearch('destination','destinationSuggestions');
+
+async function initHealth(){try{
+  const h=await apiGet('/api/health');
+  $('busPill').textContent='현재 경로: Transitous 무료 API';$('busPill').className='pill ready';
+  $('addressPill').textContent='주소 검색: 무료 공개 지오코더';$('addressPill').className='pill ready';
+  if(h.tramStations.status==='ready'){$('tramPill').textContent=`트램 좌표 ${h.tramStations.available}개`;$('tramPill').className='pill ready';}
+}catch{$('busPill').textContent='서버 연결 확인 필요';}}
+initHealth();
+</script>
+</body>
+</html>
+
+
+## v1.11.8 검증 및 정확도 고지
+- `package.json`, `/api/health`, 화면 제목/버전 표기를 1.11.8로 맞췄습니다.
+- 화면의 주소 좌표 출처는 선택된 지오코딩 결과의 `source` 필드를 사용합니다(항상 Transitous라고 고정 표기하지 않음).
+- 대전시가 2025년 10월 공개한 45개 정거장 공식 명칭을 UI 표시명에 반영했습니다. 좌표 검색어는 주변 랜드마크 기반이므로 공식 정거장 좌표와 동일하지 않을 수 있습니다.
+- 지도상의 트램 구간은 OSRM 자동차 도로망 기반 시각화 근사입니다. 실제 트램 선로 정렬이나 공식 실시설계선으로 간주하면 안 됩니다.
+- 실행 환경에서 외부 Transitous/OSM 서비스 연결이 차단될 수 있으므로, 이 환경에서는 외부 API의 실시간 응답 성공을 보장하지 않습니다.
